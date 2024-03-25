@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            margin: 2rem auto;
+            gap: 2rem;
+        }
+
+        .input-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 2rem;
+            width: 50%;
+
+        }
+
+        a {
+            display: inline-block;
+            padding: 1rem;
+            background-color: teal;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Register page</h1>
+    <form method="post" action="">
+
+        <div class="input-container">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username">
+        </div>
+
+        <div class="input-container">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password">
+        </div>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <a href="/login">Already have an account? Log In</a>
+
+</body>
+
+</html>

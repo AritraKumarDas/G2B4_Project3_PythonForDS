@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Eligibility</title>
+</head>
+
+<body>
+    <form action="">
+        <h1>House Loan Eligibility Prediction</h1>
+        <h4>Please enter the details in order to check your house loan eligibility</h4>
+
+        <div class="input-container">
+            <label for="gender">Gender</label>
+            <select name="gender" id="gender">
+                <option value="0">Male</option>
+                <option value="1">Female</option>
+            </select>
+        </div>
+
+        <div class="input-container">
+            <label for="married">Married</label>
+            <select name="married" id="married">
+                <option value="0">Yes</option>
+                <option value="1">No</option>
+            </select>
+        </div>
+
+        <div class="input-container">
+            <label for="dependents">Dependents</label>
+            <input type="number" id="dependents" name="dependents" />
+        </div>
+
+        <div class="input-container">
+            <label for="education">Education</label>
+            <select name="education" id="education">
+                <option value="0">Graduate</option>
+                <option value="1">Non graduate</option>
+            </select>
+        </div>
+
+        <div class="input-container">
+            <label for="self-employed">Self Employed</label>
+            <select name="self-employed" id="self-employed">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+        </div>
+
+        <div class="input-container">
+            <label for="applicant-income">Applicant Income</label>
+            <input type="number" id="applicant-income" name="applicant-income" />
+        </div>
+
+        <div class="input-container">
+            <label for="co-applicant-income">Co-Applicant Income</label>
+            <input type="number" id="co-applicant-income" name="co-applicant-income" />
+        </div>
+
+        <div class="input-container">
+            <label for="loan-amount">Loan amount (in thousands) </label>
+            <input type="number" id="loan-amount" name="loan-amount" />
+        </div>
+
+        <div class="input-container">
+            <label for="loan-term">Loan term (in months) </label>
+            <input type="number" id="loan-term" name="loan-term" />
+        </div>
+
+        <div class="input-container">
+            <label for="credit-history">Credit-history</label>
+            <select name="credit-history" id="credit-history">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+
+        <div class="input-container">
+            <label for="property-area">Property Area</label>
+            <select name="property-area" id="property-area">
+                <option value="0">Semi Urban</option>
+                <option value="1">Urban</option>
+                <option value="2">Rural</option>
+            </select>
+        </div>
+
+        <button type="submit">Submit</button>
+
+    </form>
+
+    <a href="/logout">Press here to logout</a>
+
+</body>
+
+</html>
