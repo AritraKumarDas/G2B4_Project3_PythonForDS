@@ -8,7 +8,9 @@
 </head>
 
 <body>
-    <form action="">
+    <form action="{{ url_for('predict')}}" method="post">
+        <p>{{user}}</p>
+        <p>{{ message }}</p>
         <h1>House Loan Eligibility Prediction</h1>
         <h4>Please enter the details in order to check your house loan eligibility</h4>
 

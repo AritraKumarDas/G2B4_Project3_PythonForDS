@@ -42,16 +42,18 @@
 
 <body>
     <h1>Register page</h1>
-    <form method="post" action="">
+
+    <h2>{{ message }}</h2>
+    <form method="post" action="{{url_for('register')}}">
 
         <div class="input-container">
             <label for="username">Username</label>
-            <input type="text" id="username" name="username">
+            <input type="text" id="username" name="username" required>
         </div>
 
         <div class="input-container">
             <label for="password">Password</label>
-            <input type="password" id="password" name="password">
+            <input type="password" id="password" name="password" required minlength="3">
         </div>
 
         <button type="submit">Register</button>
