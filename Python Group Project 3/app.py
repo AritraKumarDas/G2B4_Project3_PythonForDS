@@ -1,45 +1,95 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, redirect, request, jsonify, render_template
 import numpy as np
 import pickle
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:12345678@localhost/users_db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+db = SQLAlchemy(app)
+
 model = pickle.load(open('model.pkl','rb'))
 
+class UserInfo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100),unique=True)
+    password = db.Column(db.String(100))
+    def __init__(self,username,password):
+        self.username = username
+        self.password = password
 
-@app.route('/predict')
+with app.app_context():
+    db.create_all()
+    db.session.commit()
+
+
+isLoggedIn = False
+
+@app.route('/predict', methods=['GET','POST'])
 def predict():
-    return render_template('predict.html')
+    if not isLoggedIn:
+        return redirect('/')
+    elif isLoggedIn and request.method == 'GET' :
+        return render_template('predict.html')
+    elif (isLoggedIn and request.method == 'POST'):
+        return render_template('predict.html', message=f"You are eligible for loan")
 
 
-@app.route('/login')
+
+@app.route('/login', methods=['GET','POST'])
 def login():
-    return render_template('login.html')
+    global isLoggedIn
+    if isLoggedIn == False and request.method == 'GET' :
+        return render_template('login.html')
+    elif isLoggedIn == False and request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        try:
+            user = UserInfo.query.filter_by(username=username).first()
+            if user.username == username and user.password == password:
+                isLoggedIn = True
+                return redirect('/predict')
+            elif user.username == username and user.password != password:
+                return render_template('login.html', message="Password is do not match")
+        except Exception as e:
+            return render_template('login.html', message="Username not registered/invalid")
+          
+    elif isLoggedIn == True:
+        return redirect('/predict')
 
-@app.route('/register')
+
+
+@app.route('/register', methods=['GET','POST'])
 def register():
-    return render_template('register.html')
+    if request.method=='GET':
+        return render_template('register.html')
+    elif request.method == 'POST':
+        ## collect username & password from the form
+        username = request.form['username']
+        password = request.form['password']
+        try:
+            new_user = UserInfo(username,password)
+            db.session.add(new_user)
+            db.session.commit()
+            return render_template('register.html', message="User created successfully")
+        except Exception as e:
+            return render_template('register.html', message=f"Username already exists")
+
+
+
+@app.route('/logout')
+def logout():
+    global isLoggedIn 
+    isLoggedIn = False
+    return render_template('logout.html')
 
 
 
 @app.route('/')
 def home():
     return render_template('home.html')
-    
-    # if request.method == 'GET':
-    #     return render_template('index.html')
-    
-    # age_of_car = int(request.form['Age_of_the_car'])
-    # present_price = float(request.form['Present_Price'])
-    # kms_driven = float(request.form['Kms_Driven'])
-    # owner = int(request.form['Owner'])
-    # fuel_type = int(request.form['Fuel_Type'])
-    # seller_type = int(request.form['Seller_Type'])
-    # transmission = int(request.form['Transmission'])
-
-    # prediction = model.predict([[present_price,kms_driven,fuel_type, seller_type, transmission, owner, age_of_car ]])
-    # output = round(prediction[0],2)
-    # return render_template('index.html',prediction_text = f"Predicted Selling Price : {output} Lakhs" ) 
+ 
     
 
 if __name__ == '__main__':
