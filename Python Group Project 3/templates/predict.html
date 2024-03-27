@@ -9,7 +9,8 @@
 
 <body>
     <form action="{{ url_for('predict')}}" method="post">
-        <p>{{user}}</p>
+
+        <p>{{ username }},you are logged in!</p>
         <p>{{ message }}</p>
         <h1>House Loan Eligibility Prediction</h1>
         <h4>Please enter the details in order to check your house loan eligibility</h4>
@@ -52,12 +53,12 @@
         </div>
 
         <div class="input-container">
-            <label for="applicant-income">Applicant Income</label>
+            <label for="applicant-income">Applicant Income (In $) </label>
             <input type="number" id="applicant-income" name="applicant-income" />
         </div>
 
         <div class="input-container">
-            <label for="co-applicant-income">Co-Applicant Income</label>
+            <label for="co-applicant-income">Co-Applicant Income (In $)</label>
             <input type="number" id="co-applicant-income" name="co-applicant-income" />
         </div>
 
