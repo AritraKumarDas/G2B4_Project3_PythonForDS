@@ -1,4 +1,4 @@
-from flask import Flask, redirect, request, jsonify, render_template
+from flask import Flask, redirect, request, jsonify, render_template, session
 import numpy as np
 import pickle
 from flask_sqlalchemy import SQLAlchemy
@@ -24,38 +24,56 @@ with app.app_context():
     db.session.commit()
 
 
-isLoggedIn = False
+app.secret_key = 'aritra_session_key'
+
 
 @app.route('/predict', methods=['GET','POST'])
 def predict():
-    if not isLoggedIn:
+    if ('isLoggedIn' not in session) or (session['isLoggedIn'] == False):
         return redirect('/')
-    elif isLoggedIn and request.method == 'GET' :
-        return render_template('predict.html')
-    elif (isLoggedIn and request.method == 'POST'):
-        return render_template('predict.html', message=f"You are eligible for loan")
+    elif session['isLoggedIn']==True and request.method == 'GET' :
+        return render_template('predict.html', username=session['username'])
+    elif (session['isLoggedIn']==True and request.method == 'POST'):
+        gender = int(request.form['gender'])
+        married = int(request.form['married'])
+        dependents = int(request.form['dependents'])
+        education = int(request.form['education'])
+        self_employed = int(request.form['self-employed'])
+        applicant_income = float(request.form['applicant-income'])
+        co_applicant_income = float(request.form['co-applicant-income'])
+        loan_amount = float(request.form['loan-amount'])
+        loan_term = int(request.form['loan-term'])
+        credit_history = float(request.form['credit-history'])
+        property_area = int(request.form['property-area'])
+
+        prediction =  model.predict([[gender,married, dependents, education, self_employed, applicant_income,co_applicant_income, loan_amount, loan_term,credit_history,property_area]])
+
+        output_msg = f"Congratulations! {session['username']}, you are eligible for loan!" if (prediction[0] == 'y' or prediction[0] == 'Y') else f"Sorry! {session['username']}, you are not eligible for loan"
+
+        return render_template('predict.html', message=output_msg, username=session['username'])
 
 
 
 @app.route('/login', methods=['GET','POST'])
 def login():
-    global isLoggedIn
-    if isLoggedIn == False and request.method == 'GET' :
+    
+    if ( ('isLoggedIn' not in session) or (session['isLoggedIn'] == False) ) and request.method == 'GET' :
         return render_template('login.html')
-    elif isLoggedIn == False and request.method == 'POST':
+    elif ( ('isLoggedIn' not in session) or (session['isLoggedIn'] == False) ) and request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         try:
             user = UserInfo.query.filter_by(username=username).first()
             if user.username == username and user.password == password:
-                isLoggedIn = True
+                session['isLoggedIn'] = True
+                session['username'] = username
                 return redirect('/predict')
             elif user.username == username and user.password != password:
-                return render_template('login.html', message="Password is do not match")
+                return render_template('login.html', message="Password do not match")
         except Exception as e:
             return render_template('login.html', message="Username not registered/invalid")
           
-    elif isLoggedIn == True:
+    elif 'isLoggedIn' in session and session['isLoggedIn'] == True:
         return redirect('/predict')
 
 
@@ -80,8 +98,8 @@ def register():
 
 @app.route('/logout')
 def logout():
-    global isLoggedIn 
-    isLoggedIn = False
+    session['isLoggedIn'] = False
+    session.pop('username',default=None)
     return render_template('logout.html')
 
 
@@ -90,7 +108,48 @@ def logout():
 def home():
     return render_template('home.html')
  
-    
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+# from flask import Flask, render_template, redirect, request, session
+# from models import UserInfo  # Assuming you have a module for database models
+
+# app = Flask(__name__)
+# app.secret_key = 'your_secret_key'  # Set a secret key for session security
+
+# @app.route('/login', methods=['GET', 'POST'])
+# def login():
+#     if 'username' not in session:
+#         if request.method == 'GET':
+#             return render_template('login.html')
+#         elif request.method == 'POST':
+#             username = request.form['username']
+#             password = request.form['password']
+#             user = UserInfo.query.filter_by(username=username).first()
+#             if user and user.password == password:
+#                 session['username'] = username
+#                 session['isLoggedIn'] = True
+#                 return redirect('/predict')
+#             else:
+#                 return render_template('login.html', message="Invalid username or password")
+#     else:
+#         return redirect('/predict')
+
+# @app.route('/predict')
+# def predict():
+#     if 'username' in session:
+#         username = session['username']
+#         return render_template('predict.html', username=username)
+#     else:
+#         return redirect('/login')
+
+# @app.route('/logout')
+# def logout():
+#     session.pop('username', None)
+#     session.pop('isLoggedIn', None)
+#     return redirect('/login')
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
