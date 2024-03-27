@@ -27,12 +27,20 @@ with app.app_context():
 app.secret_key = 'aritra_session_key'
 
 
-@app.route('/predict', methods=['GET','POST'])
-def predict():
+@app.route('/enter-details')
+def get_details():
     if ('isLoggedIn' not in session) or (session['isLoggedIn'] == False):
         return redirect('/')
     elif session['isLoggedIn']==True and request.method == 'GET' :
         return render_template('predict.html', username=session['username'])
+
+
+
+@app.route('/predict', methods=['GET','POST'])
+def predict():
+    if request.method=='GET':
+        return redirect('/enter-details')
+    
     elif (session['isLoggedIn']==True and request.method == 'POST'):
         gender = int(request.form['gender'])
         married = int(request.form['married'])
@@ -64,17 +72,17 @@ def login():
         password = request.form['password']
         try:
             user = UserInfo.query.filter_by(username=username).first()
-            if user.username == username and user.password == password:
+            if user.username.lower() == username.lower() and user.password == password:
                 session['isLoggedIn'] = True
-                session['username'] = username
-                return redirect('/predict')
-            elif user.username == username and user.password != password:
+                session['username'] = username.capitalize()
+                return redirect('/enter-details')
+            elif user.username.lower() == username.lower() and user.password != password:
                 return render_template('login.html', message="Password do not match")
         except Exception as e:
-            return render_template('login.html', message="Username not registered/invalid")
+            return render_template('login.html', message="Username is not registered / invalid")
           
     elif 'isLoggedIn' in session and session['isLoggedIn'] == True:
-        return redirect('/predict')
+        return redirect('/enter-details')
 
 
 
@@ -84,15 +92,21 @@ def register():
         return render_template('register.html')
     elif request.method == 'POST':
         ## collect username & password from the form
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form['username'].strip()
+        password = request.form['password'].strip()
         try:
-            new_user = UserInfo(username,password)
-            db.session.add(new_user)
-            db.session.commit()
-            return render_template('register.html', message="User created successfully")
+            if len(username) < 4 :
+                return render_template('register.html', message="Username must be atleast 4 characters long")
+            elif len(password) < 4 :
+                return render_template('register.html', message="Password must be atleast 4 characters long")
+            else :
+                new_user = UserInfo(username,password)
+                db.session.add(new_user)
+                db.session.commit()
+                return render_template('register.html', message=f"Username '{username.capitalize()}' registered successfully")
+            
         except Exception as e:
-            return render_template('register.html', message=f"Username already exists")
+            return render_template('register.html', message=f"Username '{username.capitalize()}' already exists")
 
 
 
