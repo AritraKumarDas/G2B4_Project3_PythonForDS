@@ -103,10 +103,10 @@ def register():
                 new_user = UserInfo(username,password)
                 db.session.add(new_user)
                 db.session.commit()
-                return render_template('register.html', message=f"Username '{username.capitalize()}' registered successfully")
+                return render_template('register.html', message=f"Username '{username}' registered successfully")
             
         except Exception as e:
-            return render_template('register.html', message=f"Username '{username.capitalize()}' already exists")
+            return render_template('register.html', message=f"Username '{username}' already exists")
 
 
 
