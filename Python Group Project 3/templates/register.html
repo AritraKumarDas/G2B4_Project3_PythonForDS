@@ -5,61 +5,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Registration</title>
-    <style>
-        h1 {
-            text-align: center;
-        }
 
-        form {
-            width: 50%;
+    <link rel="stylesheet" href="../static/styles.css">
+    <style>
+        .registration {
+            background-color: lightcoral;
+            width: 100%;
+            max-width: 400px;
+
+            padding: 2rem;
+            border-radius: 5px;
+            margin: 2rem auto;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            align-items: flex-start;
-            margin: 2rem auto;
-            gap: 2rem;
+            align-items: center;
         }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            /* margin-top: 2rem; */
+            gap: 1rem;
+            /* background-color: aqua; */
+        }
+
+
 
         .input-container {
             display: flex;
             flex-direction: row;
             align-items: center;
             gap: 2rem;
-            width: 50%;
+            /* background-color: lawngreen; */
+        }
 
+        .input-container label,
+        .input-container input {
+            font-size: 1rem;
+            padding: 4px;
+        }
+
+        .input-container label {
+            font-weight: 700;
+        }
+
+        .input-container input {
+            background-color: gainsboro;
+            border: none;
+            border-radius: 2px;
+        }
+
+        form>button {
+            padding: 0.4rem 1rem;
+            background-color: teal;
+            font-size: 1rem;
+            outline: none;
+            border: none;
+            margin-block: 1rem;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            color: maroon;
+            font-style: italic;
         }
 
         a {
             display: inline-block;
-            padding: 1rem;
-            background-color: teal;
             color: white;
-            text-decoration: none;
-            border-radius: 5px;
+            font-size: 1.1rem;
+            line-height: 1.6rem;
+
         }
     </style>
 </head>
 
 <body>
-    <h1>Register page</h1>
+    <section class="registration">
+        <h1>Registration page</h1>
+        <p class="message">{{ message }}</p>
+        <form method="post" action="{{url_for('register')}}">
 
-    <h2>{{ message }}</h2>
-    <form method="post" action="{{url_for('register')}}">
+            <div class="input-container">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
 
-        <div class="input-container">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required>
-        </div>
+            <div class="input-container">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
 
-        <div class="input-container">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required minlength="3">
-        </div>
+            <button type="submit">Register</button>
+        </form>
 
-        <button type="submit">Register</button>
-    </form>
 
-    <a href="/login">Already have an account? Log In</a>
+
+        <a href="/login">Already have an account? Log In</a>
+
+    </section>
 
 </body>
 
