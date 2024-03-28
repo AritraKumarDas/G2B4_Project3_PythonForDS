@@ -112,9 +112,13 @@ def register():
 
 @app.route('/logout')
 def logout():
-    session['isLoggedIn'] = False
-    session.pop('username',default=None)
-    return render_template('logout.html')
+    if 'isLoggedIn' not in session or session['isLoggedIn'] == False :
+        return render_template('login.html', message="You have not yet Signed In")
+    else:
+        username = session['username']
+        session['isLoggedIn'] = False
+        session.pop('username',default=None)
+        return render_template('login.html', message = f"{username}, you have successfully logged out")
 
 
 
