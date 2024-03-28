@@ -5,37 +5,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loan Eligibility</title>
+    <link rel="stylesheet" href="../static/styles.css">
     <style>
-        h1 {
-            text-align: center;
-        }
-
-        .links-container {
+        .container {
+            width: 50vw;
+            background-color: white;
+            margin: 3rem auto;
+            padding: 2rem;
+            border-radius: 5px;
             display: flex;
             flex-direction: column;
+            justify-content: flex-start;
             align-items: center;
             gap: 2rem;
-            width: 20%;
-            margin: 3rem auto;
+
+            box-shadow: 0 0 10px 5px olivedrab;
         }
 
-        .links-container a {
+        h1 {
+            text-align: center;
+            font-size: calc(1rem + 0.6vw);
+        }
+
+        .container .links {
             display: inline-block;
-            padding: 1rem;
+            padding-block: 0.8rem;
             background-color: teal;
             color: white;
             text-decoration: none;
             border-radius: 5px;
+            font-size: 1.2rem;
+            width: 160px;
+            text-align: center;
+        }
+
+        @media only screen and (max-width: 1000px) {
+
+            .container {
+                width: 60vw;
+            }
+        }
+
+        @media only screen and (max-width: 850px) {
+
+            .container {
+                width: 70vw;
+            }
+        }
+
+        @media only screen and (max-width: 700px) {
+
+            .container {
+                width: 90vw;
+            }
+        }
+
+        @media only screen and (max-width: 550px) {
+
+            .container {
+                width: 100%;
+                box-shadow: none;
+
+            }
+        }
+
+        @media only screen and (max-width: 480px) {
+
+            .input-container input,
+            .input-container select {
+                display: block;
+                margin-bottom: 0.5rem;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h1>Please login/Signup to check loan eligibility</h1>
-    <div class="links-container">
-        <a href="/login">Login Now</a>
-        <a href="/register">Register Now</a>
-    </div>
+    <section class="container">
+        <h1>Please login / Signup to check loan eligibility</h1>
+
+        <a class="links" href="/login">Login Now</a>
+        <a class="links" href="/register">Register Now</a>
+
+    </section>
 
 </body>
 
